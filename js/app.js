@@ -88,7 +88,7 @@
         callback: function(id) {
           selectedWine = wines.filter(function(wine) {
             return wine.id === id;
-          })[0];
+          });
           $('#selectWineType').text(selectedWine.type)
           $('#selectedWineVarietal').text(selectedWine.varietal)
           SelectedWineView.render(selectedWine);
