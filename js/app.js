@@ -76,12 +76,13 @@
     //================================
 
 
-    $('.scroll-panel').on('tap', 'li', function() {
+/*    $('.scroll-panel').on('tap', 'li', function() {
       var whichWine = $(this).attr('data-id');
       $.GoToScreen('selectedWine:' + whichWine);
-    });
+    });*/
 
     var SelectedWineRoute = $.Router();
+
     SelectedWineRoute.addRoute([
       {
         route: 'selectedWine',
@@ -104,9 +105,11 @@
     var searchParameters;
     var searchPanel = $('#searchPanel').html();
     var searchNavBar = $('#searchNavBarTemplate').html();
+
     var assembleSearchSheet = function () {
       $('#searchSheet section').html(searchNavBar + searchPanel);
     };
+    
     var searchParameteresTemplate = $('#searchParameteresTemplate').html();
     $('#searchParameters').html(searchParameteresTemplate);
     $('#searchParameters-no-match').html(searchParameteresTemplate);
