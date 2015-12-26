@@ -74,13 +74,6 @@
     // Define handlers to show select 
     // wines from scroll panel:
     //================================
-
-
-/*    $('.scroll-panel').on('tap', 'li', function() {
-      var whichWine = $(this).attr('data-id');
-      $.GoToScreen('selectedWine:' + whichWine);
-    });*/
-
     var SelectedWineRoute = $.Router();
 
     SelectedWineRoute.addRoute([
@@ -109,7 +102,7 @@
     var assembleSearchSheet = function () {
       $('#searchSheet section').html(searchNavBar + searchPanel);
     };
-    
+
     var searchParameteresTemplate = $('#searchParameteresTemplate').html();
     $('#searchParameters').html(searchParameteresTemplate);
     $('#searchParameters-no-match').html(searchParameteresTemplate);
