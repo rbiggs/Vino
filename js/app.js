@@ -1,39 +1,53 @@
 (function() {
   'use strict';
+  console.log(this);
   $(function() {
 
-    //==============================================
-    // Define two veiws for special reds and whites:
-    //==============================================
-    var SpecialRedsView = $.View({
-      element: '#picksRed',
-      variable: 'wine'
-    });
-    SpecialRedsView.render(bestWines[0].data);
+    //======================================
+    // Scope views and routes to App object:
+    //======================================
+    var App = {
 
-    var SpecialWhitesView = $.View({
-      element: '#picksWhite',
-      variable: 'wine'
-    });
-    SpecialWhitesView.render(bestWines[1].data);
+      // Define views:
+      SpecialRedsView: $.View({
+        element: '#picksRed',
+        variable: 'wine'
+      }),
 
-    // Define selected wine views:
-    //===========================
-    var SelectedWineView = $.View({
-      element: '#wineDetail',
-      variable: 'wine'
-    });
+      SpecialWhitesView: $.View({
+        element: '#picksWhite',
+        variable: 'wine'
+      }),
 
-    var SelectWineTypeView = $.View({
-      element: '#selectWineType',
-      variable: 'wine'
-    });
+      SelectedWineView: $.View({
+        element: '#wineDetail',
+        variable: 'wine'
+      }),
 
-    // Define view for Selected Search Result:
-    var FilteredWinesView = $.View({
-      element: '#filteredWines',
-      variable: 'wine'
-    })
+      FilteredWinesView: $.View({
+        element: '#filteredWines',
+        variable: 'wine'
+      }),
+
+      WineryView: $.View({
+        element: '#viewWinery',
+        noTemplate: true,
+        events: [{
+          event: 'tap',
+          callback: function() {
+            var location = $(this).attr('data-location');
+            window.location.href= 'http://maps.apple.com/?q=' + location;
+          }
+        }]
+      }),
+
+      // Define router:
+      WineRoute: $.Router()
+    };
+
+    App.SpecialRedsView.render(bestWines[0].data);
+    App.SpecialWhitesView.render(bestWines[1].data);
+
 
     // Get purchase sheet template:
     var purchaseSheetTemplate = $('#purchaseSheetTemplate').html();
@@ -74,18 +88,16 @@
     // Define handlers to show select 
     // wines from scroll panel:
     //================================
-    var SelectedWineRoute = $.Router();
-
-    SelectedWineRoute.addRoute([
+    App.WineRoute.addRoute([
       {
         route: 'selectedWine',
         callback: function(id) {
-          selectedWine = wines.filter(function(wine) {
+          var selectedWine = wines.filter(function(wine) {
             return wine.id === id;
-          });
-          $('#selectWineType').text(selectedWine.type)
-          $('#selectedWineVarietal').text(selectedWine.varietal)
-          SelectedWineView.render(selectedWine);
+          })[0];
+          $('#selectWineType').text(selectedWine.type);
+          $('#selectedWineVarietal').text(selectedWine.varietal);
+          App.SelectedWineView.render(selectedWine);
           outputHeroImg();
           $('#viewWinery').attr('data-location', selectedWine.location);
         }
@@ -95,7 +107,6 @@
     //==========================
     // Define methods for search
     //==========================
-    var searchParameters;
     var searchPanel = $('#searchPanel').html();
     var searchNavBar = $('#searchNavBarTemplate').html();
 
@@ -191,19 +202,15 @@
 
         // Show search parameters:
         showChosenSearchParameters($('#searchParameters'), searchParameters);
-        FilteredWinesView.render(filteredWines);
+        App.FilteredWinesView.render(filteredWines);
       }
     });
 
-    //===============================
-    // Define event handler to begin 
-    // purchase process:
-    //===============================
-    var pval = 0;
-    var progressInterval;
     // Define method for purchase process.
     // This will animate the progress bar:
     //====================================
+    var pval = 0;
+    var progressInterval;
     var processProgress = function() {
       if (pval === 500) {
         // Make sure we are starting clean:
@@ -214,7 +221,6 @@
 
         // Show the confirmation panel:
         $('#confirmationPanel').css('display', 'block');
-        console.log('Show the confirmation panel')
         if ($('body').hasClass('isDesktop')) {
           $('#purchaseSheet').css('height', '140px');
         } else {
@@ -261,7 +267,6 @@
       var price = $(this).text().trim();
       $('#purchasePopup').find('.panel p').text('Do you want to purchase ' + wine + ' for ' + price + '?');
       $('#purchasePopup').ShowPopup();
-
     });
 
     // Define handler to display purchase sheet:
@@ -277,25 +282,5 @@
         $('#progressPanel').show();
       }, 200);
     });
-
-    //===========================
-    // Show winery in Apple Maps:
-    //===========================
-    var renderWineryMap = function(location) {
-      // Apple Maps search:
-      window.location.href= 'http://maps.apple.com/?q=' + location;
-      // Generic search:
-      // window.location.href= 'maps://?q=' + location;
-    };
-
-    // Define event handler to show 
-    // winery in Apple Maps:
-    //=============================
-    $('#viewWinery').on('tap', function() {
-      var location = $(this).attr('data-location');
-      renderWineryMap(location);
-    });
-
-
   });
 })();

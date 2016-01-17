@@ -365,6 +365,10 @@ progress {
 .isStandalone screen:not(#main) {
   top: 45px !important;
 }
+toolbar {
+  -webkit-justify-content: space-between !important;
+  justify-content: space-between !important;
+}
 @media only screen and (device-width: 375px) {
   #california-wines-header {
     height: 160px;
